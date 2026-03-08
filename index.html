@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YSJ ARCHIVE : 2026</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Pretendard:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>YSJ IDEAL TYPE WORLD CUP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Pretendard:wght@700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0a0a0a;
+            --bg: #000000; /* 블랙 배경 */
             --card-bg: #ffffff;
             --text-main: #ffffff;
             --text-sub: #111111;
@@ -19,8 +19,8 @@
             font-family: 'Pretendard', sans-serif;
             background-color: var(--bg); color: var(--text-main);
             overflow: hidden;
-            /* 더 미세하고 세련된 도트 패턴 */
-            background-image: radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px);
+            /* 은은한 격자 도트 패턴 배경 */
+            background-image: radial-gradient(#222 1px, transparent 1px);
             background-size: 15px 15px;
         }
 
@@ -41,9 +41,7 @@
             padding: 20px 80px; font-family: 'Montserrat'; font-weight: 900;
             font-size: 1.5rem; background: var(--text-main); color: var(--bg);
             border: none; cursor: pointer; transition: all 0.3s;
-            letter-spacing: 2px;
         }
-        #start-btn:hover { background: #cccccc; letter-spacing: 8px; }
 
         /* 메인 게임 영역 */
         #game-container {
@@ -51,65 +49,82 @@
         }
 
         .header-nav {
-            padding: 30px 50px; display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px solid var(--line);
+            padding: 20px; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid var(--line); background: rgba(0,0,0,0.8);
         }
-        .header-nav h1 { font-family: 'Montserrat'; font-size: 1.8rem; margin: 0; letter-spacing: 1px; }
+        .header-nav h1 { font-family: 'Montserrat'; font-size: 1.5rem; margin: 0; }
+        .match-counter { font-family: 'Montserrat'; font-size: 0.9rem; font-weight: 900; }
 
         .match-area {
-            flex: 1; display: flex; gap: 40px; padding: 40px; align-items: center; justify-content: center;
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            position: relative; overflow: hidden;
         }
 
+        /* 카드 컨테이너: 마우스 오버 시 연출을 위한 가상 요소 활용 */
         .card-container {
-            flex: 1; max-width: 450px; height: 80%; display: flex; flex-direction: column;
+            flex: 1; display: flex; flex-direction: column;
             cursor: pointer; transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-            border: 1px solid var(--line); background: var(--card-bg);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            background: var(--card-bg); overflow: hidden;
+            filter: grayscale(1); /* 기본 흑백 */
+            position: relative;
+        }
+        .card-container:hover { filter: grayscale(0); transform: scale(1.03); z-index: 5; }
+
+        /* VS 배지: 카드 위에 배치하여 카드 간격을 좁힘 */
+        .vs-badge {
+            position: absolute; z-index: 10;
+            font-family: 'Montserrat'; font-size: 1.5rem; font-weight: 900;
+            color: black; background: white;
+            width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;
+            border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            pointer-events: none; border: 3px solid black; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
 
-        /* 마우스 오버 시 연출: 선택된 카드는 강조, 배경은 살짝 어둡게 */
-        .match-area:hover .card-container:not(:hover) {
-            opacity: 0.4; transform: scale(0.95); filter: grayscale(1);
-        }
-
-        .image-box { flex: 1; overflow: hidden; background: #eee; }
+        .image-box { flex: 1; overflow: hidden; background: #eee; position: relative; }
         .image-box img { 
             width: 100%; height: 100%; object-fit: cover; 
             transition: transform 0.6s ease;
         }
-        .card-container:hover img { transform: scale(1.08); }
+        
+        /* 선택 연출: 한쪽 카드에 마우스를 올리면 다른 쪽 카드가 살짝 어두워짐 */
+        .match-area:hover .card-container:not(:hover) {
+            opacity: 0.5; filter: grayscale(1) !important;
+        }
 
         /* 글자 박스: 자간 및 가독성 최적화 */
         .text-box {
-            padding: 25px 20px; background: #ffffff; color: #000000;
+            padding: 15px 10px; background: #ffffff; color: #000000;
             text-align: center; border-top: 1px solid #ddd;
+            height: 80px; display: flex; align-items: center; justify-content: center;
         }
         .text-box .name {
-            font-weight: 800; font-size: 1.3rem; line-height: 1.4;
+            font-weight: 800; font-size: 1.1rem; line-height: 1.4;
             letter-spacing: -0.5px; word-break: keep-all;
         }
 
-        .vs-circle {
-            font-family: 'Montserrat'; font-size: 2rem; font-weight: 900;
-            color: var(--line); border: 2px solid var(--line);
-            width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;
-            border-radius: 50%; flex-shrink: 0;
+        /* 모바일용 미디어 쿼리: 스크린샷처럼 휴대폰에서 볼 때 카드 간격 좁힘 */
+        @media screen and (max-width: 768px) {
+            .match-area { gap: 5px; padding: 10px; } /* 카드 사이 간격 최소화 */
+            .card-container { height: 70vh; } /* 카드를 세로로 더 길게 */
+            .text-box { height: 100px; padding: 20px 10px; }
+            .text-box .name { font-size: 1.2rem; }
+            .vs-badge { font-size: 1.2rem; width: 40px; height: 40px; }
         }
 
         /* 결과 화면 */
         #result-screen {
             display: none; flex-direction: column; align-items: center; justify-content: center;
-            width: 100%; height: 100%;
+            width: 100%; height: 100%; padding: 20px;
         }
-        .winner-tag { font-family: 'Montserrat'; font-size: 5rem; margin-bottom: 20px; }
+        .winner-tag { font-family: 'Montserrat'; font-size: 4rem; margin-bottom: 20px; color: white; }
         
-        .btn-group { margin-top: 40px; display: flex; gap: 20px; }
+        .btn-group { margin-top: 30px; display: flex; gap: 10px; width: 100%; max-width: 400px; }
         .btn {
-            padding: 18px 45px; font-weight: 700; font-size: 1rem;
-            cursor: pointer; transition: 0.3s; border: 1px solid white;
+            flex: 1; padding: 18px; font-weight: 700; font-size: 1rem;
+            cursor: pointer; transition: 0.3s; border: none; font-family: 'Pretendard';
         }
         .btn-fill { background: white; color: black; }
-        .btn-outline { background: transparent; color: white; }
+        .btn-outline { background: #333; color: white; border: 1px solid white; }
         .btn:hover { opacity: 0.6; }
 
         #confetti { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 200; }
@@ -128,14 +143,14 @@
     <div id="game-container">
         <div class="header-nav">
             <h1 id="round-title">ROUND 16</h1>
-            <div id="match-info" style="font-family: 'Montserrat'; font-weight: 900;">01 / 08</div>
+            <div class="match-counter" id="match-info">01 / 08</div>
         </div>
         <div class="match-area">
             <div class="card-container" onclick="select(0)">
                 <div class="image-box"><img id="img-l" src=""></div>
                 <div class="text-box"><div class="name" id="name-l">-</div></div>
             </div>
-            <div class="vs-circle">VS</div>
+            <div class="vs-badge">VS</div>
             <div class="card-container" onclick="select(1)">
                 <div class="image-box"><img id="img-r" src=""></div>
                 <div class="text-box"><div class="name" id="name-r">-</div></div>
@@ -144,10 +159,10 @@
     </div>
 
     <div id="result-screen">
-        <div class="winner-tag">WINNER</div>
+        <div class="winner-tag">THE FINAL</div>
         <div id="winner-slot"></div>
         <div class="btn-group">
-            <button class="btn btn-fill" onclick="sendEmail()">SEND TO YANGJUN</button>
+            <button class="btn btn-fill" onclick="sendEmail()">양준이에게 인증샷</button>
             <button class="btn btn-outline" onclick="location.reload()">RETRY</button>
         </div>
     </div>
@@ -157,6 +172,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script>
+        // 데이터 유지
         let items = [
             { name: "후궁, 누구를 들이시겠습니까", src: "yj_0.jpg" },
             { name: "오빠랑 잠깐 나가서 메로나 먹고 올래? ㅋㅋ", src: "yj_1.jpg" },
@@ -177,7 +193,7 @@
         function openDoor() {
             document.getElementById('intro-screen').style.display = 'none';
             document.getElementById('game-container').style.display = 'flex';
-            document.getElementById('bgm').play().catch(e => {});
+            document.getElementById('bgm').play().catch(e => { console.log("Audio play blocked"); });
             items.sort(() => Math.random() - 0.5);
             update();
         }
@@ -197,7 +213,7 @@
                 }
             }
 
-            document.getElementById('round-title').innerText = items.length === 2 ? "FINAL MATCH" : "ROUND " + items.length;
+            document.getElementById('round-title').innerText = items.length === 2 ? "THE FINAL" : "ROUND " + items.length;
             document.getElementById('match-info').innerText = String(cur / 2 + 1).padStart(2, '0') + " / " + String(Math.floor(items.length / 2)).padStart(2, '0');
             document.getElementById('img-l').src = items[cur].src;
             document.getElementById('name-l').innerText = items[cur].name;
@@ -216,19 +232,20 @@
             document.getElementById('game-container').style.display = 'none';
             document.getElementById('result-screen').style.display = 'flex';
             document.getElementById('winner-slot').innerHTML = `
-                <div class="card-container" style="width:380px; height:520px; flex:none; transform:none; opacity:1 !important; filter:none !important;">
+                <div class="card-container" style="width:300px; height:450px; flex:none; filter:grayscale(0); z-index:10;">
                     <div class="image-box"><img src="${winner.src}"></div>
                     <div class="text-box"><div class="name">${winner.name}</div></div>
                 </div>
             `;
             
-            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#ffffff', '#888888', '#222222'] });
+            // 폭죽 효과 (화이트/블랙/그레이로 세련되게)
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#ffffff', '#222222', '#888888'] });
         }
 
         function sendEmail() {
             const email = "yangsj051216@naver.com";
             const subject = encodeURIComponent("[WINNER] YSJ WORLD CUP RESULT");
-            const body = encodeURIComponent(`양준아! 이번 월드컵 최종 우승자는...\n\n🏆 "${finalWinner.name}"\n\n축하해! 곧 인증샷 보내줄게! 💖`);
+            const body = encodeURIComponent(`양준님 이번 월드컵 최종 우승자는...\n\n🏆 "${finalWinner.name}"\n\n입니다.`);
             window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
         }
     </script>
