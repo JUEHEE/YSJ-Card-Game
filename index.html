@@ -240,7 +240,7 @@
         function sendEmail() {
             const email = "yangsj051216@naver.com";
             const subject = encodeURIComponent("[YSJ ARCADE] NEW HIGHSCORE!");
-            const body = encodeURIComponent(`양준아, 나의 아케이드 최종 우승자는...\n\n🏆 "${finalWinner.name}" 🏆\n\n이 결과에 이의는 받지 않는다. 사랑해!`);
+            const body = encodeURIComponent(`양준아, 나의 아케이드 최종 우승자는...\n\n🏆 "${finalWinner.name}" 🏆\n\n`);
             window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
         }
     </script>
