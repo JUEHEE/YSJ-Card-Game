@@ -3,157 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YSJ WORLD CUP : KITSCH EDITION</title>
-    <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@700&family=Noto+Sans+KR:wght@700&display=swap" rel="stylesheet">
+    <title>YSJ ARCHIVE (24)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Noto+Sans+KR:wght@300;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --window-bg: #ffffff;
-            --window-border: #d1d1d1;
-            --os-gray: #e4e4e4;
-            --accent-blue: #4a90e2;
-            --soft-pink: #ffb6c1;
-            --kitsch-green: #90ee90;
+            --bg: #f4f4f4;
+            --main: #111111;
+            --point: #ff3e3e; /* 강렬한 레드 포인트 */
+            --accent: #ffffff;
         }
 
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
-            background-color: #f0f0f0; /* 배경 회색 */
             font-family: 'Noto Sans KR', sans-serif;
-            display: flex; justify-content: center; align-items: center;
+            background-color: var(--bg); color: var(--main);
             overflow: hidden;
         }
 
-        /* OS 윈도우 스타일 프레임 */
-        .window-frame {
-            width: 90vw; max-width: 600px; height: 80vh;
-            background: var(--window-bg);
-            border: 1px solid var(--window-border);
-            border-radius: 10px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
-            display: flex; flex-direction: column;
-            position: relative; overflow: hidden;
-        }
-
-        /* 윈도우 상단 바 */
-        .window-header {
-            background: var(--os-gray);
-            height: 40px; border-bottom: 1px solid var(--window-border);
-            display: flex; align-items: center; padding: 0 15px;
-            gap: 8px;
-        }
-        .dot { width: 12px; height: 12px; border-radius: 50%; }
-        .red { background: #ff5f56; }
-        .yellow { background: #ffbd2e; }
-        .green { background: #27c93f; }
-        .address-bar {
-            background: white; flex: 1; margin: 0 15px;
-            height: 24px; border-radius: 4px; border: 1px solid #ccc;
-            font-size: 12px; display: flex; align-items: center;
-            padding-left: 10px; color: #666;
-        }
-
-        /* 인트로: 문이 열리는 효과 */
+        /* 인트로: 매거진 커버 스타일 */
         #intro-screen {
-            position: absolute; inset: 0; z-index: 100;
-            display: flex; justify-content: center; align-items: center;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 100; display: flex; justify-content: center; align-items: center;
+            background: var(--main);
         }
+
         .door {
             position: absolute; width: 50%; height: 100%;
-            background: var(--soft-pink);
-            transition: transform 1.2s cubic-bezier(0.87, 0, 0.13, 1);
-            display: flex; justify-content: center; align-items: center;
-            z-index: 2;
+            background: var(--main); display: flex; align-items: center;
+            transition: transform 1.2s cubic-bezier(0.8, 0, 0.2, 1);
         }
-        .door-left { left: 0; border-right: 1px solid rgba(0,0,0,0.1); }
-        .door-right { right: 0; border-left: 1px solid rgba(0,0,0,0.1); }
+        .door-left { left: 0; justify-content: flex-end; border-right: 1px solid #333; }
+        .door-right { right: 0; justify-content: flex-start; }
+
         .door.open-left { transform: translateX(-100%); }
         .door.open-right { transform: translateX(100%); }
-        
-        .door-text { font-family: 'Gaegu'; font-size: 3rem; color: white; text-align: center; }
+
+        .door-text {
+            font-family: 'Montserrat'; font-size: 12vw; color: var(--accent);
+            letter-spacing: -5px; line-height: 0.8; opacity: 0.9;
+        }
 
         #start-btn {
-            position: absolute; z-index: 3;
-            padding: 15px 40px; font-size: 1.5rem; font-family: 'Gaegu';
-            background: var(--kitsch-green); border: 2px solid #000;
-            border-radius: 50px; cursor: pointer; transition: 0.3s;
+            position: absolute; z-index: 110;
+            padding: 15px 50px; font-family: 'Montserrat'; font-weight: 900;
+            font-size: 1.5rem; background: var(--point); color: white;
+            border: none; cursor: pointer; transition: 0.3s;
         }
-        #start-btn:hover { transform: scale(1.1) rotate(-3deg); }
+        #start-btn:hover { letter-spacing: 5px; background: white; color: var(--main); }
 
-        /* 메인 게임 영역 */
-        #main-content {
-            flex: 1; display: flex; flex-direction: column;
-            padding: 20px; overflow-y: auto; text-align: center;
+        /* 메인 게임 화면 */
+        #game-container {
+            display: none; flex-direction: column; width: 100%; height: 100%;
         }
 
-        .round-info { font-family: 'Gaegu'; font-size: 2rem; margin-bottom: 20px; color: var(--accent-blue); }
-
-        .card-container {
-            display: flex; gap: 15px; flex: 1; align-items: center;
+        .nav-bar {
+            padding: 30px 50px; display: flex; justify-content: space-between;
+            align-items: baseline; border-bottom: 2px solid var(--main);
         }
+        .nav-bar h1 { font-family: 'Montserrat'; font-size: 2rem; margin: 0; }
+        .match-counter { font-family: 'Montserrat'; font-size: 1.2rem; font-weight: 900; }
+
+        .match-box {
+            display: flex; flex: 1; position: relative;
+        }
+
         .card {
-            flex: 1; border: 1px solid #eee; border-radius: 12px;
-            overflow: hidden; cursor: pointer; transition: 0.3s;
-            background: #fafafa; position: relative;
+            flex: 1; position: relative; cursor: pointer;
+            overflow: hidden; transition: flex 0.6s cubic-bezier(0.2, 1, 0.3, 1);
+            border-right: 1px solid var(--main);
         }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
-        .card img { width: 100%; height: 250px; object-fit: cover; }
-        .card-name { padding: 15px; font-size: 0.9rem; line-height: 1.4; color: #444; }
+        .card:last-child { border-right: none; }
+        .card:hover { flex: 1.4; }
 
-        .vs-label { font-family: 'Gaegu'; font-size: 2rem; color: #ff5f56; }
+        .card img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 0.8s; filter: grayscale(100%);
+        }
+        .card:hover img { transform: scale(1.05); filter: grayscale(0%); }
+
+        .info-tag {
+            position: absolute; bottom: 40px; left: 40px; right: 40px;
+            background: white; padding: 25px; border: 3px solid var(--main);
+            box-shadow: 10px 10px 0px var(--main); opacity: 0; transform: translateY(20px);
+            transition: 0.4s;
+        }
+        .card:hover .info-tag { opacity: 1; transform: translateY(0); }
+        .info-tag .name { font-weight: 900; font-size: 1.5rem; }
 
         /* 결과 화면 */
         #result-screen {
-            display: none; flex-direction: column; align-items: center; gap: 20px;
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            width: 100%; height: 100%; background: var(--bg);
         }
-        .final-img { width: 200px; height: 200px; border-radius: 50%; border: 5px solid var(--soft-pink); object-fit: cover; }
-        .final-btn {
-            padding: 12px 30px; border-radius: 8px; border: none;
-            font-weight: bold; cursor: pointer; font-family: 'Noto Sans KR';
+        .winner-label { font-family: 'Montserrat'; font-size: 5rem; margin-bottom: -30px; z-index: 1; }
+        
+        .action-group { margin-top: 40px; display: flex; gap: 15px; }
+        .btn {
+            padding: 15px 30px; font-weight: 700; border: 3px solid var(--main);
+            cursor: pointer; transition: 0.2s; background: white;
         }
-        .cert-btn { background: var(--soft-pink); color: white; margin-bottom: 10px; }
+        .btn-main { background: var(--main); color: white; }
+        .btn:hover { transform: translate(-4px, -4px); box-shadow: 6px 6px 0px var(--main); }
 
-        #confetti { position: fixed; inset: 0; pointer-events: none; z-index: 200; }
+        #confetti { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 200; }
     </style>
 </head>
 <body>
 
-    <div class="window-frame">
-        <div class="window-header">
-            <div class="dot red"></div>
-            <div class="dot yellow"></div>
-            <div class="dot green"></div>
-            <div class="address-bar">www.yang-jun-world-cup.com</div>
+    <div id="intro-screen">
+        <button id="start-btn" onclick="openDoor()">START REVELATION</button>
+        <div class="door door-left" id="d-left"><div class="door-text">YSJ<br>ARC</div></div>
+        <div class="door door-right" id="d-right"><div class="door-text">HIV<br>E24</div></div>
+    </div>
+
+    <div id="game-container">
+        <div class="nav-bar">
+            <h1 id="round-title">STAGE 16</h1>
+            <div class="match-counter" id="match-info">01 / 08</div>
         </div>
-
-        <div id="intro-screen">
-            <button id="start-btn" onclick="openDoor()">START !</button>
-            <div class="door door-left" id="d-left"><div class="door-text">양준이</div></div>
-            <div class="door door-right" id="d-right"><div class="door-text">월드컵</div></div>
+        <div class="match-box">
+            <div class="card" onclick="select(0)">
+                <img id="img-l" src="">
+                <div class="info-tag"><div class="name" id="name-l">-</div></div>
+            </div>
+            <div class="card" onclick="select(1)">
+                <img id="img-r" src="">
+                <div class="info-tag"><div class="name" id="name-r">-</div></div>
+            </div>
         </div>
+    </div>
 
-        <div id="main-content">
-            <div id="game-view">
-                <div class="round-info" id="round-title">ROUND 16</div>
-                <div class="card-container">
-                    <div class="card" onclick="select(0)">
-                        <img id="img-l" src="">
-                        <div class="card-name" id="name-l"></div>
-                    </div>
-                    <div class="vs-label">vs</div>
-                    <div class="card" onclick="select(1)">
-                        <img id="img-r" src="">
-                        <div class="card-name" id="name-r"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="result-screen">
-                <h2 style="font-family: 'Gaegu'; font-size: 2.5rem; color: var(--soft-pink);">My Best Choice!</h2>
-                <img id="final-img" class="final-img">
-                <p id="final-name" style="font-weight: bold;"></p>
-                <button class="final-btn cert-btn" onclick="sendEmail()">양준이에게 인증샷 보내기 💌</button>
-                <button onclick="location.reload()" style="background:none; border:none; text-decoration:underline; cursor:pointer; color:#999;">다시하기</button>
-            </div>
+    <div id="result-screen">
+        <div class="winner-label">WINNER</div>
+        <div id="winner-slot"></div>
+        <div class="action-group">
+            <button class="btn btn-main" onclick="sendEmail()">SEND TO YANGJUN</button>
+            <button class="btn" onclick="location.reload()">RE-ARCHIVE</button>
         </div>
     </div>
 
@@ -162,6 +147,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script>
+        // 데이터 유지
         let items = [
             { name: "후궁, 누구를 들이시겠습니까", src: "yj_0.jpg" },
             { name: "오빠랑 잠깐 나가서 메로나 먹고 올래? ㅋㅋ", src: "yj_1.jpg" },
@@ -186,7 +172,8 @@
             document.getElementById('bgm').play().catch(e => {});
 
             setTimeout(() => {
-                document.getElementById('intro-screen').style.pointerEvents = 'none';
+                document.getElementById('intro-screen').style.display = 'none';
+                document.getElementById('game-container').style.display = 'flex';
                 items.sort(() => Math.random() - 0.5);
                 update();
             }, 1200);
@@ -202,9 +189,13 @@
                 items = [...winners];
                 winners = [];
                 cur = 0;
+                if (items.length > 1 && items.length % 2 !== 0) {
+                    winners.push(items.pop());
+                }
             }
 
-            document.getElementById('round-title').innerText = items.length === 2 ? "FINAL MATCH" : "ROUND " + items.length;
+            document.getElementById('round-title').innerText = items.length === 2 ? "THE FINAL" : "STAGE " + items.length;
+            document.getElementById('match-info').innerText = String(cur / 2 + 1).padStart(2, '0') + " / " + String(Math.floor(items.length / 2)).padStart(2, '0');
             document.getElementById('img-l').src = items[cur].src;
             document.getElementById('name-l').innerText = items[cur].name;
             document.getElementById('img-r').src = items[cur + 1].src;
@@ -219,18 +210,25 @@
 
         function showResult(winner) {
             finalWinner = winner;
-            document.getElementById('game-view').style.display = 'none';
+            document.getElementById('game-container').style.display = 'none';
             document.getElementById('result-screen').style.display = 'flex';
-            document.getElementById('final-img').src = winner.src;
-            document.getElementById('final-name').innerText = winner.name;
+            document.getElementById('winner-slot').innerHTML = `
+                <div class="card" style="width:400px; height:550px; flex:none; border:4px solid var(--main);">
+                    <img src="${winner.src}" style="filter:none;">
+                    <div class="info-tag" style="opacity:1; transform:none; bottom:20px;">
+                        <div class="name">${winner.name}</div>
+                    </div>
+                </div>
+            `;
             
-            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+            // 깔끔하고 고급스러운 폭죽 효과
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#111', '#ff3e3e', '#ffffff'] });
         }
 
         function sendEmail() {
             const email = "yangsj051216@naver.com";
-            const subject = encodeURIComponent("[인증] 내가 뽑은 최고의 양준!");
-            const body = encodeURIComponent(`양준아\n내가 뽑은 최고의 양준이는 바로...\n\n"${finalWinner.name}"\n\n이거이노라.`);
+            const subject = encodeURIComponent("[CONFIRMED] YSJ WORLD CUP WINNER");
+            const body = encodeURIComponent(`양준아, 이 결과는 운명이자 확정이야.\n\n나의 아카이브 최종 우승자:\n🏆 ${finalWinner.name}\n\n`);
             window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
         }
     </script>
