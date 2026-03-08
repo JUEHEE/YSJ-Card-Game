@@ -3,22 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PAGE (24) : YSJ World Cup</title>
-    <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&display=swap" rel="stylesheet">
+    <title>YSJ WORLD CUP : UNLIMITED</title>
+    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Pretendard:wght@900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --main-pink: #f1c6d3;
-            --dark-pink: #e4a1b5;
-            --text-black: #333;
+            --neon-pink: #ff007f;
+            --deep-black: #0a0a0a;
+            --acid-green: #ccff00;
+            --glass: rgba(255, 255, 255, 0.1);
         }
 
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
-            font-family: 'Gaegu', cursive; background-color: var(--main-pink);
-            overflow: hidden; color: var(--text-black);
+            font-family: 'Pretendard', sans-serif;
+            background-color: var(--deep-black);
+            color: white; overflow: hidden;
         }
 
-        /* 인트로: 문 열기 애니메이션 */
+        /* 인트로: 그래픽 디자인적인 문 */
         #intro-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             z-index: 100; display: flex; justify-content: center; align-items: center;
@@ -26,126 +28,134 @@
 
         .door {
             position: absolute; width: 50%; height: 100%;
-            background-color: var(--main-pink);
-            border: 2px solid white; transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex; justify-content: center; align-items: center; overflow: hidden;
+            background: var(--neon-pink);
+            display: flex; justify-content: center; align-items: center;
+            transition: all 1.2s cubic-bezier(0.87, 0, 0.13, 1);
+            border: 1px solid rgba(255,255,255,0.2);
+            overflow: hidden;
         }
-        .door-left { left: 0; transform-origin: left; border-right: none; }
-        .door-right { right: 0; transform-origin: right; border-left: none; }
+        .door-left { left: 0; border-right: 4px solid var(--deep-black); }
+        .door-right { right: 0; border-left: 4px solid var(--deep-black); }
 
-        .door.open-left { transform: rotateY(-110deg); }
-        .door.open-right { transform: rotateY(110deg); }
+        /* 문이 열릴 때 옆으로 밀려남 */
+        .door.open-left { transform: translateX(-100%); }
+        .door.open-right { transform: translateX(100%); }
 
-        /* 문 위의 디자인 (보내주신 이미지 느낌) */
-        .door-design { text-align: center; pointer-events: none; }
-        .hbd-circle {
-            display: inline-block; width: 40px; height: 50px; border-radius: 50%;
-            background: white; border: 1px solid #ccc; line-height: 50px;
-            font-size: 1.5rem; margin: 5px; font-weight: bold;
+        .door-text {
+            font-family: 'Black Han Sans', sans-serif;
+            font-size: 8vw; line-height: 0.9; color: var(--deep-black);
+            text-transform: uppercase; user-select: none;
         }
 
-        /* 스타트 버튼 */
+        /* 스타트 버튼: 디자인적인 포인트 */
         #start-btn {
             position: absolute; z-index: 110;
-            padding: 15px 40px; font-size: 2rem; font-family: 'Gaegu';
-            background: white; border: 3px solid var(--dark-pink);
-            border-radius: 50px; cursor: pointer; color: var(--dark-pink);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: 0.3s;
+            padding: 20px 60px; font-size: 2.5rem; font-family: 'Black Han Sans';
+            background: var(--acid-green); border: none;
+            color: var(--deep-black); cursor: pointer;
+            transform: rotate(-5deg); transition: 0.2s;
+            box-shadow: 8px 8px 0px var(--deep-black);
         }
-        #start-btn:hover { transform: scale(1.1); background: var(--dark-pink); color: white; }
+        #start-btn:hover { transform: rotate(0deg) scale(1.1); box-shadow: 0px 0px 20px var(--acid-green); }
 
         /* 게임 컨테이너 */
         #game-container {
             display: none; flex-direction: column; align-items: center;
-            width: 100%; height: 100%; padding-top: 20px;
+            width: 100%; height: 100%; 
+            background: radial-gradient(circle, #222 0%, #000 100%);
         }
 
-        .header { text-align: center; margin-bottom: 20px; }
-        .header h1 { font-size: 3rem; margin: 0; color: white; text-shadow: 2px 2px var(--dark-pink); }
+        .header { margin-top: 40px; text-align: center; z-index: 10; }
+        .header h1 { 
+            font-family: 'Black Han Sans'; font-size: 4rem; margin: 0;
+            color: var(--neon-pink); -webkit-text-stroke: 1px white;
+        }
 
         .match-box {
             display: flex; align-items: center; justify-content: center;
-            gap: 20px; width: 90%; max-width: 900px;
+            gap: 10px; width: 100%; flex: 1;
         }
 
         .card {
-            flex: 1; background: white; border-radius: 20px; overflow: hidden;
-            cursor: pointer; transition: 0.3s; border: 5px solid white;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            position: relative; flex: 1; height: 70vh;
+            cursor: pointer; overflow: hidden;
+            transition: 0.5s; filter: grayscale(0.5);
         }
-        .card:hover { transform: translateY(-10px); border-color: var(--dark-pink); }
-        .img-box { width: 100%; height: 350px; background: #eee; }
-        .img-box img { width: 100%; height: 100%; object-fit: cover; }
-        .name-tag { padding: 15px; text-align: center; font-size: 1.4rem; font-weight: bold; }
+        .card:hover { filter: grayscale(0); flex: 1.5; }
+        .card img { width: 100%; height: 100%; object-fit: cover; }
 
-        .vs { font-size: 3rem; font-weight: 900; color: white; text-shadow: 3px 3px var(--dark-pink); }
+        .name-overlay {
+            position: absolute; bottom: 0; left: 0; width: 100%;
+            padding: 40px 20px; background: linear-gradient(transparent, black);
+            font-family: 'Black Han Sans'; font-size: 2rem; color: var(--acid-green);
+        }
+
+        .vs-badge {
+            position: absolute; z-index: 5; font-family: 'Black Han Sans';
+            font-size: 5rem; color: white; font-style: italic;
+            text-shadow: 4px 4px var(--neon-pink); pointer-events: none;
+        }
 
         /* 결과 화면 */
         #result-screen {
             display: none; flex-direction: column; align-items: center; justify-content: center;
-            width: 100%; height: 100%; text-align: center;
+            width: 100%; height: 100%; background: var(--deep-black);
         }
-        #winner-slot { margin: 20px 0; }
+        .winner-title { font-family: 'Black Han Sans'; font-size: 3rem; color: var(--neon-pink); }
+        
         .final-btn {
-            padding: 10px 25px; font-size: 1.5rem; margin: 10px;
-            border-radius: 30px; border: none; cursor: pointer; font-family: 'Gaegu';
+            padding: 15px 40px; font-size: 1.2rem; margin: 10px;
+            font-family: 'Pretendard'; font-weight: 900; border: none; cursor: pointer;
         }
-        .cert-btn { background: #34ace0; color: white; }
-        .retry-btn { background: var(--dark-pink); color: white; }
+        .cert-btn { background: var(--acid-green); color: var(--deep-black); }
+        .retry-btn { background: #333; color: white; }
 
-        /* 빵빠레 효과용 전광판 */
         #confetti { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 200; }
     </style>
 </head>
 <body>
 
     <div id="intro-screen">
-        <button id="start-btn" onclick="openDoor()">START!</button>
+        <button id="start-btn" onclick="openDoor()">ENTER</button>
         <div class="door door-left" id="d-left">
-            <div class="door-design">
-                <div class="hbd-circle">H</div><div class="hbd-circle">B</div><div class="hbd-circle">D</div>
-                <p>MY DEAR SOOBIE</p>
-            </div>
+            <div class="door-text">YSJ<br>WORLD</div>
         </div>
         <div class="door door-right" id="d-right">
-            <div class="door-design">
-                <div class="hbd-circle">Y</div><div class="hbd-circle">S</div><div class="hbd-circle">J</div>
-                <p>PAGE (24)</p>
-            </div>
+            <div class="door-text">CUP<br>2026</div>
         </div>
     </div>
 
     <div id="game-container">
         <div class="header">
-            <h1 id="round-title">10강</h1>
-            <p id="match-info" style="font-size: 1.5rem;">1 / 5</p>
+            <h1 id="round-title">ROUND 16</h1>
+            <p id="match-info" style="color: var(--acid-green);">1 / 8</p>
         </div>
+        <div class="vs-badge">VS</div>
         <div class="match-box">
             <div class="card" onclick="select(0)">
-                <div class="img-box"><img id="img-l" src=""></div>
-                <div class="name-tag" id="name-l">후보 A</div>
+                <img id="img-l" src="">
+                <div class="name-overlay" id="name-l">CANDIDATE A</div>
             </div>
-            <div class="vs">VS</div>
             <div class="card" onclick="select(1)">
-                <div class="img-box"><img id="img-r" src=""></div>
-                <div class="name-tag" id="name-r">후보 B</div>
+                <img id="img-r" src="">
+                <div class="name-overlay" id="name-r">CANDIDATE B</div>
             </div>
         </div>
     </div>
 
     <div id="result-screen">
-        <h1>💖 양준이를 대체할 사람은 오로지 새로운 양성준💖</h1>
-        <div id="winner-slot"></div>
-        <button class="final-btn cert-btn" onclick="sendEmail()">양준이한테 인증샷 보내기</button>
-        <button class="final-btn retry-btn" onclick="location.reload()">다시 하기</button>
+        <div class="winner-title">THE FINAL WINNER</div>
+        <div id="winner-slot" style="margin: 30px 0;"></div>
+        <button class="final-btn cert-btn" onclick="sendEmail()">양준이에게 결과 전송</button>
+        <button class="final-btn retry-btn" onclick="location.reload()">REPLAY</button>
     </div>
 
     <canvas id="confetti"></canvas>
-
     <audio id="bgm" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script>
+        // 데이터 부분은 동일하게 유지 (이미지 경로는 본인의 파일명에 맞게 확인해주세요)
         let items = [
             { name: "후궁, 누구를 들이시겠습니까", src: "yj_0.jpg" },
             { name: "오빠랑 잠깐 나가서 메로나 먹고 올래? ㅋㅋ", src: "yj_1.jpg" },
@@ -164,17 +174,17 @@
         let finalWinner = null;
 
         function openDoor() {
-            document.getElementById('start-btn').style.display = 'none';
+            document.getElementById('start-btn').style.opacity = '0';
             document.getElementById('d-left').classList.add('open-left');
             document.getElementById('d-right').classList.add('open-right');
-            document.getElementById('bgm').play(); // 음악 시작
+            document.getElementById('bgm').play().catch(e => console.log("Audio play blocked"));
 
             setTimeout(() => {
                 document.getElementById('intro-screen').style.display = 'none';
                 document.getElementById('game-container').style.display = 'flex';
                 items.sort(() => Math.random() - 0.5);
                 update();
-            }, 1500);
+            }, 1200);
         }
 
         function update() {
@@ -188,12 +198,11 @@
                 winners = [];
                 cur = 0;
                 if (items.length > 1 && items.length % 2 !== 0) {
-                    let bye = items.pop();
-                    winners.push(bye);
+                    winners.push(items.pop());
                 }
             }
 
-            document.getElementById('round-title').innerText = items.length === 2 ? "FINAL" : items.length + "강";
+            document.getElementById('round-title').innerText = items.length === 2 ? "FINAL MATCH" : "ROUND " + items.length;
             document.getElementById('match-info').innerText = (cur / 2 + 1) + " / " + Math.floor(items.length / 2);
             document.getElementById('img-l').src = items[cur].src;
             document.getElementById('name-l').innerText = items[cur].name;
@@ -212,27 +221,31 @@
             document.getElementById('game-container').style.display = 'none';
             document.getElementById('result-screen').style.display = 'flex';
             document.getElementById('winner-slot').innerHTML = `
-                <div class="card" style="width:320px; cursor:default;">
-                    <div class="img-box" style="height:400px;"><img src="${winner.src}"></div>
-                    <div class="name-tag">${winner.name}</div>
+                <div class="card" style="width:350px; height:500px; filter:grayscale(0); border:5px solid var(--neon-pink);">
+                    <img src="${winner.src}">
+                    <div class="name-overlay" style="background:var(--neon-pink); color:black; text-align:center;">${winner.name}</div>
                 </div>
             `;
             
-            // 빵빠레 (폭죽 효과)
-            var duration = 5 * 1000;
-            var end = Date.now() + duration;
+            // 빵빠레 효과 (비비드한 컬러)
+            const count = 200;
+            const defaults = { origin: { y: 0.7 } };
 
-            (function frame() {
-                confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ff7473', '#ffc952'] });
-                confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#ff7473', '#ffc952'] });
-                if (Date.now() < end) { requestAnimationFrame(frame); }
-            }());
+            function fire(particleRatio, opts) {
+                confetti({ ...defaults, ...opts, particleCount: Math.floor(count * particleRatio) });
+            }
+
+            fire(0.25, { spread: 26, startVelocity: 55 });
+            fire(0.2, { spread: 60 });
+            fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+            fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+            fire(0.1, { spread: 120, startVelocity: 45 });
         }
 
         function sendEmail() {
             const email = "yangsj051216@naver.com";
-            const subject = encodeURIComponent("[이상형 월드컵] 양준이에게 인증샷 도착! 💖");
-            const body = encodeURIComponent(`양준아! 내 이상형 월드컵 최종 우승자는 바로...\n\n🏆 "${finalWinner.name}" 🏆\n\n이거야! 사랑해 뿜뿜!`);
+            const subject = encodeURIComponent(" [YSJ WORLD CUP] 최종 결과 리포트 ");
+            const body = encodeURIComponent(`양준아, \n\n나의 원픽은 바로...\n--------------------------\n 우승: ${finalWinner.name}\n--------------------------\n`);
             window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
         }
     </script>
