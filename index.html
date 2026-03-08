@@ -3,151 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YSJ WORLD CUP : UNLIMITED</title>
-    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Pretendard:wght@900&display=swap" rel="stylesheet">
+    <title>YSJ WORLD CUP : KITSCH EDITION</title>
+    <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@700&family=Noto+Sans+KR:wght@700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --neon-pink: #ff007f;
-            --deep-black: #0a0a0a;
-            --acid-green: #ccff00;
-            --glass: rgba(255, 255, 255, 0.1);
+            --window-bg: #ffffff;
+            --window-border: #d1d1d1;
+            --os-gray: #e4e4e4;
+            --accent-blue: #4a90e2;
+            --soft-pink: #ffb6c1;
+            --kitsch-green: #90ee90;
         }
 
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
-            font-family: 'Pretendard', sans-serif;
-            background-color: var(--deep-black);
-            color: white; overflow: hidden;
-        }
-
-        /* 인트로: 그래픽 디자인적인 문 */
-        #intro-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 100; display: flex; justify-content: center; align-items: center;
-        }
-
-        .door {
-            position: absolute; width: 50%; height: 100%;
-            background: var(--neon-pink);
+            background-color: #f0f0f0; /* 배경 회색 */
+            font-family: 'Noto Sans KR', sans-serif;
             display: flex; justify-content: center; align-items: center;
-            transition: all 1.2s cubic-bezier(0.87, 0, 0.13, 1);
-            border: 1px solid rgba(255,255,255,0.2);
             overflow: hidden;
         }
-        .door-left { left: 0; border-right: 4px solid var(--deep-black); }
-        .door-right { right: 0; border-left: 4px solid var(--deep-black); }
 
-        /* 문이 열릴 때 옆으로 밀려남 */
+        /* OS 윈도우 스타일 프레임 */
+        .window-frame {
+            width: 90vw; max-width: 600px; height: 80vh;
+            background: var(--window-bg);
+            border: 1px solid var(--window-border);
+            border-radius: 10px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            display: flex; flex-direction: column;
+            position: relative; overflow: hidden;
+        }
+
+        /* 윈도우 상단 바 */
+        .window-header {
+            background: var(--os-gray);
+            height: 40px; border-bottom: 1px solid var(--window-border);
+            display: flex; align-items: center; padding: 0 15px;
+            gap: 8px;
+        }
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .red { background: #ff5f56; }
+        .yellow { background: #ffbd2e; }
+        .green { background: #27c93f; }
+        .address-bar {
+            background: white; flex: 1; margin: 0 15px;
+            height: 24px; border-radius: 4px; border: 1px solid #ccc;
+            font-size: 12px; display: flex; align-items: center;
+            padding-left: 10px; color: #666;
+        }
+
+        /* 인트로: 문이 열리는 효과 */
+        #intro-screen {
+            position: absolute; inset: 0; z-index: 100;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .door {
+            position: absolute; width: 50%; height: 100%;
+            background: var(--soft-pink);
+            transition: transform 1.2s cubic-bezier(0.87, 0, 0.13, 1);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 2;
+        }
+        .door-left { left: 0; border-right: 1px solid rgba(0,0,0,0.1); }
+        .door-right { right: 0; border-left: 1px solid rgba(0,0,0,0.1); }
         .door.open-left { transform: translateX(-100%); }
         .door.open-right { transform: translateX(100%); }
+        
+        .door-text { font-family: 'Gaegu'; font-size: 3rem; color: white; text-align: center; }
 
-        .door-text {
-            font-family: 'Black Han Sans', sans-serif;
-            font-size: 8vw; line-height: 0.9; color: var(--deep-black);
-            text-transform: uppercase; user-select: none;
-        }
-
-        /* 스타트 버튼: 디자인적인 포인트 */
         #start-btn {
-            position: absolute; z-index: 110;
-            padding: 20px 60px; font-size: 2.5rem; font-family: 'Black Han Sans';
-            background: var(--acid-green); border: none;
-            color: var(--deep-black); cursor: pointer;
-            transform: rotate(-5deg); transition: 0.2s;
-            box-shadow: 8px 8px 0px var(--deep-black);
+            position: absolute; z-index: 3;
+            padding: 15px 40px; font-size: 1.5rem; font-family: 'Gaegu';
+            background: var(--kitsch-green); border: 2px solid #000;
+            border-radius: 50px; cursor: pointer; transition: 0.3s;
         }
-        #start-btn:hover { transform: rotate(0deg) scale(1.1); box-shadow: 0px 0px 20px var(--acid-green); }
+        #start-btn:hover { transform: scale(1.1) rotate(-3deg); }
 
-        /* 게임 컨테이너 */
-        #game-container {
-            display: none; flex-direction: column; align-items: center;
-            width: 100%; height: 100%; 
-            background: radial-gradient(circle, #222 0%, #000 100%);
+        /* 메인 게임 영역 */
+        #main-content {
+            flex: 1; display: flex; flex-direction: column;
+            padding: 20px; overflow-y: auto; text-align: center;
         }
 
-        .header { margin-top: 40px; text-align: center; z-index: 10; }
-        .header h1 { 
-            font-family: 'Black Han Sans'; font-size: 4rem; margin: 0;
-            color: var(--neon-pink); -webkit-text-stroke: 1px white;
-        }
+        .round-info { font-family: 'Gaegu'; font-size: 2rem; margin-bottom: 20px; color: var(--accent-blue); }
 
-        .match-box {
-            display: flex; align-items: center; justify-content: center;
-            gap: 10px; width: 100%; flex: 1;
+        .card-container {
+            display: flex; gap: 15px; flex: 1; align-items: center;
         }
-
         .card {
-            position: relative; flex: 1; height: 70vh;
-            cursor: pointer; overflow: hidden;
-            transition: 0.5s; filter: grayscale(0.5);
+            flex: 1; border: 1px solid #eee; border-radius: 12px;
+            overflow: hidden; cursor: pointer; transition: 0.3s;
+            background: #fafafa; position: relative;
         }
-        .card:hover { filter: grayscale(0); flex: 1.5; }
-        .card img { width: 100%; height: 100%; object-fit: cover; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .card img { width: 100%; height: 250px; object-fit: cover; }
+        .card-name { padding: 15px; font-size: 0.9rem; line-height: 1.4; color: #444; }
 
-        .name-overlay {
-            position: absolute; bottom: 0; left: 0; width: 100%;
-            padding: 40px 20px; background: linear-gradient(transparent, black);
-            font-family: 'Black Han Sans'; font-size: 2rem; color: var(--acid-green);
-        }
-
-        .vs-badge {
-            position: absolute; z-index: 5; font-family: 'Black Han Sans';
-            font-size: 5rem; color: white; font-style: italic;
-            text-shadow: 4px 4px var(--neon-pink); pointer-events: none;
-        }
+        .vs-label { font-family: 'Gaegu'; font-size: 2rem; color: #ff5f56; }
 
         /* 결과 화면 */
         #result-screen {
-            display: none; flex-direction: column; align-items: center; justify-content: center;
-            width: 100%; height: 100%; background: var(--deep-black);
+            display: none; flex-direction: column; align-items: center; gap: 20px;
         }
-        .winner-title { font-family: 'Black Han Sans'; font-size: 3rem; color: var(--neon-pink); }
-        
+        .final-img { width: 200px; height: 200px; border-radius: 50%; border: 5px solid var(--soft-pink); object-fit: cover; }
         .final-btn {
-            padding: 15px 40px; font-size: 1.2rem; margin: 10px;
-            font-family: 'Pretendard'; font-weight: 900; border: none; cursor: pointer;
+            padding: 12px 30px; border-radius: 8px; border: none;
+            font-weight: bold; cursor: pointer; font-family: 'Noto Sans KR';
         }
-        .cert-btn { background: var(--acid-green); color: var(--deep-black); }
-        .retry-btn { background: #333; color: white; }
+        .cert-btn { background: var(--soft-pink); color: white; margin-bottom: 10px; }
 
-        #confetti { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 200; }
+        #confetti { position: fixed; inset: 0; pointer-events: none; z-index: 200; }
     </style>
 </head>
 <body>
 
-    <div id="intro-screen">
-        <button id="start-btn" onclick="openDoor()">ENTER</button>
-        <div class="door door-left" id="d-left">
-            <div class="door-text">YSJ<br>WORLD</div>
+    <div class="window-frame">
+        <div class="window-header">
+            <div class="dot red"></div>
+            <div class="dot yellow"></div>
+            <div class="dot green"></div>
+            <div class="address-bar">www.yang-jun-world-cup.com</div>
         </div>
-        <div class="door door-right" id="d-right">
-            <div class="door-text">CUP<br>2026</div>
-        </div>
-    </div>
 
-    <div id="game-container">
-        <div class="header">
-            <h1 id="round-title">ROUND 16</h1>
-            <p id="match-info" style="color: var(--acid-green);">1 / 8</p>
+        <div id="intro-screen">
+            <button id="start-btn" onclick="openDoor()">START !</button>
+            <div class="door door-left" id="d-left"><div class="door-text">양준이</div></div>
+            <div class="door door-right" id="d-right"><div class="door-text">월드컵</div></div>
         </div>
-        <div class="vs-badge">VS</div>
-        <div class="match-box">
-            <div class="card" onclick="select(0)">
-                <img id="img-l" src="">
-                <div class="name-overlay" id="name-l">CANDIDATE A</div>
-            </div>
-            <div class="card" onclick="select(1)">
-                <img id="img-r" src="">
-                <div class="name-overlay" id="name-r">CANDIDATE B</div>
-            </div>
-        </div>
-    </div>
 
-    <div id="result-screen">
-        <div class="winner-title">THE FINAL WINNER</div>
-        <div id="winner-slot" style="margin: 30px 0;"></div>
-        <button class="final-btn cert-btn" onclick="sendEmail()">양준이에게 결과 전송</button>
-        <button class="final-btn retry-btn" onclick="location.reload()">REPLAY</button>
+        <div id="main-content">
+            <div id="game-view">
+                <div class="round-info" id="round-title">ROUND 16</div>
+                <div class="card-container">
+                    <div class="card" onclick="select(0)">
+                        <img id="img-l" src="">
+                        <div class="card-name" id="name-l"></div>
+                    </div>
+                    <div class="vs-label">vs</div>
+                    <div class="card" onclick="select(1)">
+                        <img id="img-r" src="">
+                        <div class="card-name" id="name-r"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="result-screen">
+                <h2 style="font-family: 'Gaegu'; font-size: 2.5rem; color: var(--soft-pink);">My Best Choice!</h2>
+                <img id="final-img" class="final-img">
+                <p id="final-name" style="font-weight: bold;"></p>
+                <button class="final-btn cert-btn" onclick="sendEmail()">양준이에게 인증샷 보내기 💌</button>
+                <button onclick="location.reload()" style="background:none; border:none; text-decoration:underline; cursor:pointer; color:#999;">다시하기</button>
+            </div>
+        </div>
     </div>
 
     <canvas id="confetti"></canvas>
@@ -155,7 +162,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script>
-        // 데이터 부분은 동일하게 유지 (이미지 경로는 본인의 파일명에 맞게 확인해주세요)
         let items = [
             { name: "후궁, 누구를 들이시겠습니까", src: "yj_0.jpg" },
             { name: "오빠랑 잠깐 나가서 메로나 먹고 올래? ㅋㅋ", src: "yj_1.jpg" },
@@ -174,14 +180,13 @@
         let finalWinner = null;
 
         function openDoor() {
-            document.getElementById('start-btn').style.opacity = '0';
+            document.getElementById('start-btn').style.display = 'none';
             document.getElementById('d-left').classList.add('open-left');
             document.getElementById('d-right').classList.add('open-right');
-            document.getElementById('bgm').play().catch(e => console.log("Audio play blocked"));
+            document.getElementById('bgm').play().catch(e => {});
 
             setTimeout(() => {
-                document.getElementById('intro-screen').style.display = 'none';
-                document.getElementById('game-container').style.display = 'flex';
+                document.getElementById('intro-screen').style.pointerEvents = 'none';
                 items.sort(() => Math.random() - 0.5);
                 update();
             }, 1200);
@@ -197,13 +202,9 @@
                 items = [...winners];
                 winners = [];
                 cur = 0;
-                if (items.length > 1 && items.length % 2 !== 0) {
-                    winners.push(items.pop());
-                }
             }
 
             document.getElementById('round-title').innerText = items.length === 2 ? "FINAL MATCH" : "ROUND " + items.length;
-            document.getElementById('match-info').innerText = (cur / 2 + 1) + " / " + Math.floor(items.length / 2);
             document.getElementById('img-l').src = items[cur].src;
             document.getElementById('name-l').innerText = items[cur].name;
             document.getElementById('img-r').src = items[cur + 1].src;
@@ -218,34 +219,18 @@
 
         function showResult(winner) {
             finalWinner = winner;
-            document.getElementById('game-container').style.display = 'none';
+            document.getElementById('game-view').style.display = 'none';
             document.getElementById('result-screen').style.display = 'flex';
-            document.getElementById('winner-slot').innerHTML = `
-                <div class="card" style="width:350px; height:500px; filter:grayscale(0); border:5px solid var(--neon-pink);">
-                    <img src="${winner.src}">
-                    <div class="name-overlay" style="background:var(--neon-pink); color:black; text-align:center;">${winner.name}</div>
-                </div>
-            `;
+            document.getElementById('final-img').src = winner.src;
+            document.getElementById('final-name').innerText = winner.name;
             
-            // 빵빠레 효과 (비비드한 컬러)
-            const count = 200;
-            const defaults = { origin: { y: 0.7 } };
-
-            function fire(particleRatio, opts) {
-                confetti({ ...defaults, ...opts, particleCount: Math.floor(count * particleRatio) });
-            }
-
-            fire(0.25, { spread: 26, startVelocity: 55 });
-            fire(0.2, { spread: 60 });
-            fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
-            fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
-            fire(0.1, { spread: 120, startVelocity: 45 });
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
         }
 
         function sendEmail() {
             const email = "yangsj051216@naver.com";
-            const subject = encodeURIComponent(" [YSJ WORLD CUP] 최종 결과 리포트 ");
-            const body = encodeURIComponent(`양준아, \n\n나의 원픽은 바로...\n--------------------------\n 우승: ${finalWinner.name}\n--------------------------\n`);
+            const subject = encodeURIComponent("[인증] 내가 뽑은 최고의 양준!");
+            const body = encodeURIComponent(`양준아 안녕!\n내가 뽑은 최고의 양준이는 바로...\n\n"${finalWinner.name}"\n\n이거야! 빵빠레~ 🥳🎉`);
             window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
         }
     </script>
